@@ -46,7 +46,7 @@ import {
             justify={'flex-end'}
             direction={'row'}
             spacing={6}>
-            <Button
+            {/* <Button
               display={{ md: 'inline-flex' }}
               fontSize={'sm'}
               fontWeight={600}
@@ -57,7 +57,7 @@ import {
                 bg: 'pink.300',
               }}>
               Sign Up
-            </Button>
+            </Button> */}
           </Stack>
         </Flex>
   

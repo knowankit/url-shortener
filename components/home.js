@@ -15,12 +15,16 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react'
 import { LinkIcon } from '@chakra-ui/icons'
+import { db } from '../firebase-config'
+import { collection, getDocs } from 'firebase/firestore'
 
 export default function Home() {
   const [url, setUrl] = useState('')
 
-  const shortenUrl = () => {
-
+  const shortenUrl = async () => {
+    const linksRef = collection(db, 'links')
+    const data = await getDocs(linksRef)
+    console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
   }
 
   return (
@@ -47,7 +51,7 @@ export default function Home() {
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            More than just shorter links.
+            More than just url shorter.
           </Text>
           <Stack
             spacing={3}
