@@ -9,9 +9,20 @@ import {
   Icon,
   useColorModeValue,
   createIcon,
+  InputGroup,
+  Input,
+  InputLeftElement
 } from '@chakra-ui/react';
+import { useState } from 'react'
+import { LinkIcon } from '@chakra-ui/icons'
 
 export default function Home() {
+  const [url, setUrl] = useState('')
+
+  const shortenUrl = () => {
+
+  }
+
   return (
     <>
       <Head>
@@ -20,7 +31,7 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      <Container maxW={'3xl'}>
+      <Container maxW={'3xl'} height='calc(100vh - 65px)' display='flex' alignItems='center' justifyContent='center'>
         <Stack
           as={Box}
           textAlign={'center'}
@@ -36,29 +47,34 @@ export default function Home() {
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            Monetize your content by charging your most loyal readers and reward
-            them loyalty points. Give back to your loyal readers by granting
-            them access to your pre-releases and sneak-peaks.
+            More than just shorter links.
           </Text>
           <Stack
-            direction={'column'}
             spacing={3}
             align={'center'}
             alignSelf={'center'}
             position={'relative'}>
-            <Button
-              colorScheme={'green'}
-              bg={'green.400'}
-              rounded={'full'}
-              px={6}
-              _hover={{
-                bg: 'green.500',
-              }}>
-              Get Started
-            </Button>
-            {/* <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
-              Learn more
-            </Button> */}
+            <Box display='flex' flexDirection={['column', 'column', 'row', 'row']} height='90px' justifyContent='space-between'>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<LinkIcon color="gray.300" />}
+                />
+                <Input type="tel" placeholder="Enter your url" borderRadius='20px' value={url} onChange={(e) => setUrl(e.target.value)} />
+              </InputGroup>
+              <Button
+                colorScheme={'green'}
+                onClick={shortenUrl}
+                bg={'green.400'}
+                rounded={'full'}
+                ml='5px'
+                px={6}
+                _hover={{
+                  bg: 'green.500',
+                }}>
+                Get Started
+              </Button>
+            </Box>
             <Box>
               <Icon
                 as={Arrow}
