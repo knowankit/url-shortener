@@ -11,20 +11,66 @@ import {
   createIcon,
   InputGroup,
   Input,
-  InputLeftElement
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  ModalContent,
+  InputLeftElement,
+  InputLeftAddon
 } from '@chakra-ui/react';
 import { useState } from 'react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { db } from '../firebase-config'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, addDoc } from 'firebase/firestore'
 
 export default function Home() {
   const [url, setUrl] = useState('')
+  
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const shortenUrl = async () => {
     const linksRef = collection(db, 'links')
-    const data = await getDocs(linksRef)
-    console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+    await addDoc(linksRef, { url: 'test', slug: '123' })
+    // const data = await getDocs(linksRef)
+    // console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+  }
+
+  const ConvertModal = () => {
+    const [id, setId] = useState('')
+    return (
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<LinkIcon color="gray.300" />}
+              />
+              <Input disabled type="tel" placeholder="Enter your url" borderRadius='20px' value={url} onChange={(e) => setUrl(e.target.value)} />
+            </InputGroup>
+            <InputGroup>
+              <InputLeftAddon children="/" />
+              <Input value={id} type="tel" placeholder="Enter your url" borderRadius='20px' onChange={(e) => setId(e.target.value)} />
+            </InputGroup>
+            {<LinkIcon color="gray.300" />} {typeof window !== 'undefined' && window.location.origin}/{id}
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme={'green'} bg={'green.400'} color='white' _hover={{
+              bg: 'green.500',
+            }} variant="ghost">Generate</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    )
   }
 
   return (
@@ -46,11 +92,11 @@ export default function Home() {
             fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
             lineHeight={'110%'}>
             Shorten your long <br />
-            <Text as={'span'} color={'green.400'}>
+            <Text as={'span'} color={'pink.400'}>
               URL
             </Text>
           </Heading>
-          <Text color={'gray.500'}>
+          <Text color={'pink.400'}>
             More than just url shorter.
           </Text>
           <Stack
@@ -67,14 +113,14 @@ export default function Home() {
                 <Input type="tel" placeholder="Enter your url" borderRadius='20px' value={url} onChange={(e) => setUrl(e.target.value)} />
               </InputGroup>
               <Button
-                colorScheme={'green'}
-                onClick={shortenUrl}
-                bg={'green.400'}
+                colorScheme={'pink'}
+                onClick={onOpen}
+                bg={'pink.400'}
                 rounded={'full'}
                 ml='5px'
                 px={6}
                 _hover={{
-                  bg: 'green.500',
+                  bg: 'pink.500',
                 }}>
                 Get Started
               </Button>
@@ -101,6 +147,7 @@ export default function Home() {
           </Stack>
         </Stack>
       </Container>
+      <ConvertModal />
     </>
   );
 }
