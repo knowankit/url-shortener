@@ -29,24 +29,25 @@ import { collection, getDocs, addDoc } from 'firebase/firestore'
 
 export default function Home() {
   const [url, setUrl] = useState('')
-  
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const shortenUrl = async () => {
-    const linksRef = collection(db, 'links')
-    await addDoc(linksRef, { url: 'test', slug: '123' })
-    // const data = await getDocs(linksRef)
-    // console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
-  }
+  
+// const data = await getDocs(linksRef)
+      // console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
 
   const ConvertModal = () => {
     const [id, setId] = useState('')
+    
+    const shortenUrl = async () => {
+      const linksRef = collection(db, 'links')
+      const response = await addDoc(linksRef, { url, slug: id })
+    }
+
     return (
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Generate URL</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <InputGroup>
@@ -56,17 +57,17 @@ export default function Home() {
               />
               <Input disabled type="tel" placeholder="Enter your url" borderRadius='20px' value={url} onChange={(e) => setUrl(e.target.value)} />
             </InputGroup>
-            <InputGroup>
+            <InputGroup mt='20px'>
               <InputLeftAddon children="/" />
-              <Input value={id} type="tel" placeholder="Enter your url" borderRadius='20px' onChange={(e) => setId(e.target.value)} />
+              <Input value={id} type="url" placeholder="Enter your url" borderRadius='20px' onChange={(e) => setId(e.target.value)} />
             </InputGroup>
-            {<LinkIcon color="gray.300" />} {typeof window !== 'undefined' && window.location.origin}/{id}
+            <Box as='p' mt='20px'>{<LinkIcon color="gray.300" />} {typeof window !== 'undefined' && window.location.origin}/{id}</Box>
           </ModalBody>
 
           <ModalFooter>
             <Button colorScheme={'green'} bg={'green.400'} color='white' _hover={{
               bg: 'green.500',
-            }} variant="ghost">Generate</Button>
+            }} variant="ghost" onClick={shortenUrl}>Generate</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
