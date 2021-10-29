@@ -27,7 +27,7 @@ import {
 import { useState } from 'react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { db } from '../firebase-config'
-import { collection, getDocs, addDoc } from 'firebase/firestore'
+import { collection, addDoc } from 'firebase/firestore'
 import copy from 'copy-to-clipboard';
 
 export default function Home() {
@@ -38,16 +38,18 @@ export default function Home() {
   // const data = await getDocs(linksRef)
   // console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
 
-  const ConvertModal = () => {
+  const ConvertModal = ({ url }) => {
     const [id, setId] = useState('')
     const [isGenerating, setGenerating] = useState(false)
     const toast = useToast()
 
-    const shortenUrl = async () => {
+    const shortenUrl = async (data) => {
+      if(!data) return
       setGenerating(true)
 
       const linksRef = collection(db, 'links')
-      await addDoc(linksRef, { url, slug: id })
+
+      await addDoc(linksRef, { url: data, slug: id })
 
       const url = `${window.location.origin}/${id}`
       copy(url)
@@ -80,7 +82,7 @@ export default function Home() {
                 pointerEvents="none"
                 children={<LinkIcon color="gray.300" />}
               />
-              <Input disabled type="tel" placeholder="Enter your url" borderRadius='20px' value={url} onChange={(e) => setUrl(e.target.value)} />
+              <Input disabled type="text" placeholder="Enter your URL" borderRadius='20px' defaultValue={url} />
             </InputGroup>
             <InputGroup mt='20px'>
               <InputLeftAddon children="/" />
@@ -90,7 +92,7 @@ export default function Home() {
               <Input
                 pr="4.5rem"
                 type="text"
-                value={typeof window !== 'undefined' && `${window.location.origin}/${id}`}
+                defaultValue={typeof window !== 'undefined' && `${window.location.origin}/${id}`}
               />
               <InputRightElement width="4.5rem">
                 <Button h="1.75rem" size="sm" onClick={copyToClipboard}>
@@ -102,7 +104,7 @@ export default function Home() {
           <ModalFooter>
             <Button colorScheme={'green'} bg={'green.400'} color='white' _hover={{
               bg: 'green.500',
-            }} variant="ghost" onClick={shortenUrl} isLoading={isGenerating} loadingText='Generating'>Generate</Button>
+            }} variant="ghost" onClick={() => shortenUrl(url)} isLoading={isGenerating} loadingText='Generating'>Generate</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -183,7 +185,7 @@ export default function Home() {
           </Stack>
         </Stack>
       </Container>
-      <ConvertModal />
+      {isOpen && <ConvertModal url={url} />}
     </>
   );
 }
