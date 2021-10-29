@@ -20,27 +20,52 @@ import {
   ModalFooter,
   ModalContent,
   InputLeftElement,
-  InputLeftAddon
+  InputRightElement,
+  InputLeftAddon,
+  useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react'
 import { LinkIcon } from '@chakra-ui/icons'
 import { db } from '../firebase-config'
 import { collection, getDocs, addDoc } from 'firebase/firestore'
+import copy from 'copy-to-clipboard';
 
 export default function Home() {
   const [url, setUrl] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  
-// const data = await getDocs(linksRef)
-      // console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+
+  // const data = await getDocs(linksRef)
+  // console.log('daata', data.docs.map((doc) => ({...doc.data(), id: doc.id})))
 
   const ConvertModal = () => {
     const [id, setId] = useState('')
-    
+    const [isGenerating, setGenerating] = useState(false)
+    const toast = useToast()
+
     const shortenUrl = async () => {
+      setGenerating(true)
+
       const linksRef = collection(db, 'links')
-      const response = await addDoc(linksRef, { url, slug: id })
+      await addDoc(linksRef, { url, slug: id })
+
+      const url = `${window.location.origin}/${id}`
+      copy(url)
+
+      toast({
+        title: "Success",
+        description: "Your URL has been generated and copied to clipboard",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      })
+
+      setGenerating(false)
+    }
+
+    const copyToClipboard = () => {
+      const url = `${window.location.origin}/${id}`
+      copy(url)
     }
 
     return (
@@ -59,15 +84,25 @@ export default function Home() {
             </InputGroup>
             <InputGroup mt='20px'>
               <InputLeftAddon children="/" />
-              <Input value={id} type="url" placeholder="Enter your url" borderRadius='20px' onChange={(e) => setId(e.target.value)} />
+              <Input value={id} type="url" placeholder="Enter your URL" borderRadius='20px' onChange={(e) => setId(e.target.value)} />
             </InputGroup>
-            <Box as='p' mt='20px'>{<LinkIcon color="gray.300" />} {typeof window !== 'undefined' && window.location.origin}/{id}</Box>
+            <InputGroup size="md" mt='20px'>
+              <Input
+                pr="4.5rem"
+                type="text"
+                value={typeof window !== 'undefined' && `${window.location.origin}/${id}`}
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={copyToClipboard}>
+                  copy
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </ModalBody>
-
           <ModalFooter>
             <Button colorScheme={'green'} bg={'green.400'} color='white' _hover={{
               bg: 'green.500',
-            }} variant="ghost" onClick={shortenUrl}>Generate</Button>
+            }} variant="ghost" onClick={shortenUrl} isLoading={isGenerating} loadingText='Generating'>Generate</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
