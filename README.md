@@ -1,5 +1,7 @@
 # url-shortner ![Build status](https://github.com/knowankit/trello-clone/actions/workflows/main.yml/badge.svg)
 
+![alt text](https://github.com/knowankit/url-shortener/blob/develop/demo.png)
+
 <p align="center">
   <a href="https://twitter.com/knowankit">
     <img alt="Twitter: Ankit Kumar" src="https://img.shields.io/twitter/follow/knowankit.svg?style=social" target="_blank" />
@@ -29,8 +31,6 @@ This is a simple application for shortening the URL
 2. [npm](https://www.npmjs.com/)
 
 ## Steps to run this on your local
-
-First install the MongoDB Compass for better visualization of data with MongoDB server.
 
 1. Clone this repo using `git clone https://github.com/knowankit/url-shortner.git`
 2. Run `npm install`
@@ -63,7 +63,7 @@ Made with [contributors-img](https://contrib.rocks).
 - [My Portfolio](https://github.com/knowankit/knowankit.com)
 - [Trello clone](https://github.com/knowankit/trello-clone)
 - [Particle text effect](https://github.com/knowankit/particle-text-effect)
-- [React bubbly effect button](https://github.com/knowankit/react-bubble-effect-button)
+- [React bubbly effect button](https://github.com/knowankit/react-bubbly-effect-button)
 
 ## License
 
