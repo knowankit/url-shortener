@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react'
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from '../firebase-config'
 import { Spinner, Box } from "@chakra-ui/react"
+import NotFound from './not-found';
 
 const Redirect = ({ id }) => {
   const [spinner, setSpinner] = useState(true)
+  const [isInvalid, setInvalid] = useState(false)
+
 
   useEffect(() => {
     async function fetchData() {
@@ -17,9 +20,12 @@ const Redirect = ({ id }) => {
         data.push(doc.data());
       });
 
-      if(data.length > 0) {
+      if (data.length > 0) {
         setSpinner(false)
         window.open(data[0].url)
+      } else {
+        setSpinner(false)
+        setInvalid(true)
       }
     }
 
@@ -28,10 +34,12 @@ const Redirect = ({ id }) => {
 
   return (
     <Box height='100vh' display='flex' justifyContent='center' alignItems='center' flexDirection='column'>
-      <Box as='p'>
-      Redirecting you to the site
+      {!isInvalid && <Box as='p'>
+        Redirecting you to the site
       </Box>
+      }
       {spinner && <Spinner />}
+      {isInvalid && <NotFound />}
     </Box>
   )
 }

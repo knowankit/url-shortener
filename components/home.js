@@ -45,6 +45,7 @@ export default function Home() {
 
     const shortenUrl = async (data) => {
       if(!data) return
+      
       setGenerating(true)
 
       const linksRef = collection(db, 'links')
