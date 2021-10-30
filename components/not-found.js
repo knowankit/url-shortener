@@ -1,13 +1,13 @@
-import { Box } from "@chakra-ui/react"
+import { Heading, Box } from "@chakra-ui/react"
 
 const NotFound = () => {
     return (
         <Box height='100vh' display='flex' justifyContent='center' alignItems='center' flexDirection='column'>
-            <Box as='h1'>
+            <Heading>
                 Invalid URL
-            </Box>
+            </Heading>
         </Box>
-      )
+    )
 }
 
 export default NotFound
